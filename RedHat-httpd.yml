@@ -1,0 +1,29 @@
+- name: Install httpd on RedHat
+  yum: 
+    name: httpd
+    state: latest
+- name: start httpd
+  service:
+    name: httpd
+    state: started
+- name: enable httpd
+  systemd:
+    name: httpd
+    enabled: yes 
+  notify: restart httpd
+- name: unzip install
+  yum: 
+    name: unzip
+    state: latest
+- name: Download CStmplate
+  get_url:
+    url: https://www.free-css.com/assets/files/free-css-templates/download/page258/oleald.zip
+    dest: /var/www/html/
+- name: unzip file 
+  unarchive:
+    src: /var/www/html/oleald.zip
+    dest: /var/www/html/
+    remote_src: yes
+- name: move files
+  shell: mv /var/www/html/oleald/* /var/www/html/
+  notify:  restart httpd
